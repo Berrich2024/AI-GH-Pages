@@ -1,20 +1,18 @@
 import fs from "fs";
 import path from "path";
-import fetch from "node-fetch"; // Node 20 a fetch intégré, mais ça marche aussi
 
 // Date du jour
 const today = new Date().toISOString().split("T")[0];
 const postDir = path.join("posts");
 const filePath = path.join(postDir, `${today}.html`);
 
-// Ton prompt
+// Prompt
 const prompt = `Write a "Top 10 AI Tools Today" blog post in English, each tool in 2-3 sentences. Include intro and outro.`;
 
 async function generateContent() {
-  // Créer le dossier posts s'il n'existe pas
   if (!fs.existsSync(postDir)) fs.mkdirSync(postDir, { recursive: true });
 
-  // Appel API texte standard de Google Gemini
+  // fetch intégré à Node 20
   const res = await fetch(
     "https://generativelanguage.googleapis.com/v1beta/models/text-bison-001:generateText?key=" + process.env.GEMINI_API_KEY,
     {
@@ -28,11 +26,8 @@ async function generateContent() {
   );
 
   const data = await res.json();
-
-  // Récupérer le texte généré
   const aiText = data?.candidates?.[0]?.content || "No content generated.";
 
-  // Créer le fichier HTML
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
