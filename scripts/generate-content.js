@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const today = new Date().toISOString().split("T")[0];
-const postDir = path.join("site", "posts");
+const postDir = path.join("posts"); // plus de "site/"
 const filePath = path.join(postDir, `${today}.html`);
 
 const prompt = `Write a "Top 10 AI Tools Today" blog post in English, with each tool described in 2-3 sentences. Include a short intro and outro.`;
@@ -43,4 +43,4 @@ async function generateContent() {
   console.log("✅ Post created at", filePath);
 }
 
-generateContent()
+generateContent();
