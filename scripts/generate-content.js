@@ -1,32 +1,39 @@
 import fs from "fs";
 import path from "path";
 
-// Date du jour
 const today = new Date().toISOString().split("T")[0];
 const postDir = path.join("posts");
 const filePath = path.join(postDir, `${today}.html`);
 
-// Prompt
-const prompt = `Write a "Top 10 AI Tools Today" blog post in English, each tool in 2-3 sentences. Include intro and outro.`;
+const prompt = `Write a "Top 10 AI Tools Today" blog post in English.
+Each tool must have 2-3 sentences description.
+Add a short intro and a short outro paragraph.`;
 
+// === MAIN FUNCTION ===
 async function generateContent() {
   if (!fs.existsSync(postDir)) fs.mkdirSync(postDir, { recursive: true });
 
-  // fetch intégré à Node 20
+  console.log("📝 Generating AI content for", today);
+
   const res = await fetch(
-    "https://generativelanguage.googleapis.com/v1beta/models/text-bison-001:generateText?key=" + process.env.GEMINI_API_KEY,
+    "https://generativelanguage.googleapis.com/v1beta/models/chat-bison-001:generateMessage?key=" +
+      process.env.GEMINI_API_KEY,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        prompt: { text: prompt },
-        temperature: 0.7
+        prompt: {
+          messages: [{ author: "user", content: prompt }],
+        },
+        temperature: 0.7,
       }),
     }
   );
 
   const data = await res.json();
   console.log("🔎 API response:", JSON.stringify(data, null, 2));
+
+  // Chat-bison renvoie le texte dans candidates[0].content
   const aiText = data?.candidates?.[0]?.content || "No content generated.";
 
   const html = `<!DOCTYPE html>
