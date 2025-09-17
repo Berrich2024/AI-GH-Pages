@@ -26,6 +26,7 @@ async function generateContent() {
   );
 
   const data = await res.json();
+  console.log("🔎 API response:", JSON.stringify(data, null, 2));
   const aiText = data?.candidates?.[0]?.content || "No content generated.";
 
   const html = `<!DOCTYPE html>
