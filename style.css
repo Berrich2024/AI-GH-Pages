@@ -1,56 +1,65 @@
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  max-width: 800px;
+  font-family: Arial, sans-serif;
+  max-width: 700px;
   margin: 0 auto;
   padding: 20px;
-  background: linear-gradient(135deg, #f0f4ff, #ffffff);
-  color: #333;
+  background: #fafafa;
+  color: #222;
 }
 
-header h1 {
+header, footer {
   text-align: center;
-  color: #1a202c;
-  font-size: 2.2em;
+  margin-bottom: 20px;
 }
 
-header p {
-  text-align: center;
-  font-size: 1em;
-  margin-top: 6px;
+h1, h2 {
+  color: #222;
 }
 
-.kofi-button {
-  display: inline-block;
-  background: #29abe0;
-  color: white;
-  padding: 8px 14px;
-  border-radius: 6px;
+ul#post-list {
+  list-style: none;
+  padding: 0;
+}
+
+ul#post-list li {
+  background: white;
+  margin: 10px 0;
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+ul#post-list a {
+  color: #0077cc;
   font-weight: bold;
-  transition: background 0.3s;
   text-decoration: none;
 }
 
-.kofi-button:hover {
-  background: #0077b6;
+ul#post-list a:hover {
+  text-decoration: underline;
+}
+
+.kofi-button, .kofi-cta a {
+  color: white;
+  background: #ff5f5f;
+  padding: 5px 12px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.kofi-button:hover, .kofi-cta a:hover {
+  background: #ff3f3f;
 }
 
 article {
-  background: #ffffff;
-  padding: 20px;
-  margin: 20px 0;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  line-height: 1.6;
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-article h1 { font-size: 1.8em; margin-bottom: 10px; }
-article h2 { font-size: 1.4em; margin-top: 15px; }
-
-ul { list-style: none; padding: 0; }
-ul li { background: #e0e7ff; margin: 8px 0; padding: 10px 15px; border-radius: 8px; transition: background 0.3s; }
-ul li:hover { background: #c7d2fe; }
-ul li a { text-decoration: none; color: #1e40af; font-weight: bold; }
-
-footer { text-align: center; margin-top: 40px; font-size: 0.9em; color: #555; }
-footer a { color: #1e40af; text-decoration: none; }
-footer a:hover { text-decoration: underline; }
+.back-link {
+  display: inline-block;
+  margin-top: 20px;
+  color: #0077cc;
+}
