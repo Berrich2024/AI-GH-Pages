@@ -67,6 +67,7 @@ const prompts = [
   `Write an article about how to build an audience with free platforms only.`
 ];
 
+// Choisir un prompt aléatoire par jour
 const chosenPrompt = prompts[Math.floor(Math.random() * prompts.length)];
 
 const finalPrompt = `
@@ -79,16 +80,17 @@ At the very end, add:
 Prompt: ${chosenPrompt}
 `;
 
-try {
-  const result = await model.generateContent(finalPrompt);
-  let aiContent = result.response.text().trim();
-  aiContent = aiContent.replace(/```html|```/g, "").trim();
+async function generate() {
+  try {
+    const result = await model.generateContent(finalPrompt);
+    let aiContent = result.response.text().trim();
+    aiContent = aiContent.replace(/```html|```/g, "").trim();
 
-  const postsDir = path.join("posts");
-  if (!fs.existsSync(postsDir)) fs.mkdirSync(postsDir);
+    const postsDir = path.join("posts");
+    if (!fs.existsSync(postsDir)) fs.mkdirSync(postsDir);
 
-  const outputPath = path.join(postsDir, `${yyyyMmDd}.html`);
-  const html = `<!DOCTYPE html>
+    const outputPath = path.join(postsDir, `${yyyyMmDd}.html`);
+    const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -102,8 +104,11 @@ try {
 </body>
 </html>`;
 
-  fs.writeFileSync(outputPath, html);
-  console.log(`✅ Post created at ${outputPath}`);
-} catch (err) {
-  console.error("❌ Gemini API error:", err);
+    fs.writeFileSync(outputPath, html);
+    console.log(`✅ Post created at ${outputPath}`);
+  } catch (err) {
+    console.error("❌ Gemini API error:", err);
+  }
 }
+
+generate();
