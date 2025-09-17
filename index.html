@@ -9,7 +9,8 @@
   <header>
     <h1>AI Daily Picks</h1>
     <p>Fresh AI-curated content every day.</p>
-    <p>Support this project on 
+    <p>
+      Support this project on 
       <a href="https://ko-fi.com/lumi2024" target="_blank" class="kofi-button">Ko-Fi</a> ☕
     </p>
   </header>
@@ -18,7 +19,7 @@
     <section class="latest-posts">
       <h2>Latest Posts</h2>
       <ul id="post-list">
-        <!-- Posts générés automatiquement via JavaScript -->
+        <!-- Posts générés automatiquement via Node.js -->
       </ul>
     </section>
   </main>
@@ -26,24 +27,5 @@
   <footer>
     <p>© 2025 AI Daily Picks | <a href="https://github.com/Berrich2024/AI-GH-Pages" target="_blank">GitHub</a></p>
   </footer>
-
-  <script>
-    // Script pour lister automatiquement les fichiers HTML du dossier posts
-    const posts = [
-      "2025-09-16",
-      "2025-09-17"
-      // Ajouter ici automatiquement ou via GitHub Actions
-    ];
-
-    const postList = document.getElementById("post-list");
-    posts.reverse().forEach(date => {
-      const li = document.createElement("li");
-      const a = document.createElement("a");
-      a.href = `posts/${date}.html`;
-      a.textContent = date;
-      li.appendChild(a);
-      postList.appendChild(li);
-    });
-  </script>
 </body>
 </html>
