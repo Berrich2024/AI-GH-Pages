@@ -1,8 +1,8 @@
-name: Daily AI Content
+name: AI-GH-Pages Daily Content
 
 on:
-#  schedule:
-#   - cron: "0 6 * * *"
+  schedule:
+    - cron: "0 6 * * *" # tous les jours à 06:00 UTC
   workflow_dispatch:
 
 jobs:
@@ -20,15 +20,18 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Generate content
-        run: npm run generate
+      - name: Generate posts
+        run: node scripts/generate-content.js
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
-      - name: Commit & push
+      - name: Update index
+        run: node scripts/update-index.js
+
+      - name: Commit & Push
         run: |
-          git config user.name "AI-GH-Pages Bot"
-          git config user.email "bot@users.noreply.github.com"
+          git config --global user.name "AI-GH-Pages Bot"
+          git config --global user.email "bot@users.noreply.github.com"
           git add .
-          git commit -m "chore: add new daily post [skip ci]" || echo "No changes to commit"
+          git commit -m "Daily AI posts for ${{ github.event.schedule }}" || echo "No changes to commit"
           git push
