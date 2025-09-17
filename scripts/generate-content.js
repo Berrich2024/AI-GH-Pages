@@ -12,7 +12,7 @@ const readableDate = today.toLocaleDateString("en-US", options);
 
 console.log("📝 Generating AI content for", yyyyMmDd);
 
-// 🧠 50 prompts SEO-friendly, orientés trafic stable
+// 🧠 Liste des prompts (50, pour changer chaque jour)
 const prompts = [
   `Create a 300–400 word article listing 10 free AI tools available today, explain what each does and why they are useful. Make it sound like a curated daily list.`,
   `Write a long article suggesting 5 new side hustle ideas people can start on ${readableDate}, with clear steps and realistic earning potential.`,
@@ -67,48 +67,49 @@ const prompts = [
   `Write an article about how to build an audience with free platforms only.`
 ];
 
-// Choisir un prompt aléatoire par jour
 const chosenPrompt = prompts[Math.floor(Math.random() * prompts.length)];
 
 const finalPrompt = `
-Generate a detailed HTML article between 300 and 400 words using <article>, <h1>, and <p> tags.
-Do NOT include triple backticks or Markdown formatting.
-Make the article SEO-friendly, easy to read, and include engaging subheadings (<h2>).
+Generate a detailed HTML article between 300 and 400 words using <article>, <h1>, <h2>, and <p> tags.
+Make it engaging, SEO-friendly, and well-formatted.
 At the very end, add:
-<p>☕ Support me on <a href="https://ko-fi.com/lumi2024" target="_blank">Ko-Fi</a></p>
+<p class="kofi-cta">☕ Support me on <a href="https://ko-fi.com/lumi2024" target="_blank">Ko-Fi</a></p>
 
 Prompt: ${chosenPrompt}
 `;
 
-async function generate() {
-  try {
-    const result = await model.generateContent(finalPrompt);
-    let aiContent = result.response.text().trim();
-    aiContent = aiContent.replace(/```html|```/g, "").trim();
+try {
+  const result = await model.generateContent(finalPrompt);
+  let aiContent = result.response.text().trim();
+  aiContent = aiContent.replace(/```html|```/g, "").trim();
 
-    const postsDir = path.join("posts");
-    if (!fs.existsSync(postsDir)) fs.mkdirSync(postsDir);
+  const postsDir = path.join("posts");
+  if (!fs.existsSync(postsDir)) fs.mkdirSync(postsDir);
 
-    const outputPath = path.join(postsDir, `${yyyyMmDd}.html`);
-    const html = `<!DOCTYPE html>
+  const outputPath = path.join(postsDir, `${yyyyMmDd}.html`);
+  const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>AI Daily Picks - ${yyyyMmDd}</title>
-  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-  <h1>AI Daily Picks - ${readableDate}</h1>
-  ${aiContent}
-  <p><a href="/index.html">⬅ Back to Home</a></p>
+  <header>
+    <h1>AI Daily Picks</h1>
+  </header>
+  <main>
+    ${aiContent}
+    <p><a href="../index.html" class="back-link">⬅ Back to Home</a></p>
+  </main>
+  <footer>
+    <p>© 2025 AI Daily Picks</p>
+  </footer>
 </body>
 </html>`;
 
-    fs.writeFileSync(outputPath, html);
-    console.log(`✅ Post created at ${outputPath}`);
-  } catch (err) {
-    console.error("❌ Gemini API error:", err);
-  }
+  fs.writeFileSync(outputPath, html);
+  console.log(`✅ Post created at ${outputPath}`);
+} catch (err) {
+  console.error("❌ Gemini API error:", err);
 }
-
-generate();
