@@ -1,41 +1,28 @@
+// scripts/generate-content.js
 import fs from "fs";
 import path from "path";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 const today = new Date().toISOString().split("T")[0];
-const postDir = path.join("posts");
-const filePath = path.join(postDir, `${today}.html`);
+console.log("📝 Generating AI content for", today);
 
-const prompt = `Write a "Top 10 AI Tools Today" blog post in English.
-Each tool must have 2-3 sentences description.
-Add a short intro and a short outro paragraph.`;
+const prompt = `
+Generate a short, engaging article (50-80 words) about today's date, including one fun historical fact.
+Format it as simple HTML inside an <article> tag.
+`;
 
-// === MAIN FUNCTION ===
-async function generateContent() {
-  if (!fs.existsSync(postDir)) fs.mkdirSync(postDir, { recursive: true });
+try {
+  const result = await model.generateContent(prompt);
+  const aiContent = result.response.text().trim();
 
-  console.log("📝 Generating AI content for", today);
+  // Créer dossier posts/ si manquant
+  const postsDir = path.join("posts");
+  if (!fs.existsSync(postsDir)) fs.mkdirSync(postsDir);
 
-  const res = await fetch(
-    "https://generativelanguage.googleapis.com/v1beta/models/chat-bison-001:generateMessage?key=" +
-      process.env.GEMINI_API_KEY,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        prompt: {
-          messages: [{ author: "user", content: prompt }],
-        },
-        temperature: 0.7,
-      }),
-    }
-  );
-
-  const data = await res.json();
-  console.log("🔎 API response:", JSON.stringify(data, null, 2));
-
-  // Chat-bison renvoie le texte dans candidates[0].content
-  const aiText = data?.candidates?.[0]?.content || "No content generated.";
-
+  const outputPath = path.join(postsDir, `${today}.html`);
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,13 +32,13 @@ async function generateContent() {
 </head>
 <body>
   <h1>AI Daily Picks - ${today}</h1>
-  <article>${aiText.replace(/\n/g, "<br>")}</article>
+  ${aiContent}
   <p><a href="/index.html">⬅ Back to Home</a></p>
 </body>
 </html>`;
 
-  fs.writeFileSync(filePath, html);
-  console.log("✅ Post created at", filePath);
+  fs.writeFileSync(outputPath, html);
+  console.log(`✅ Post created at ${outputPath}`);
+} catch (err) {
+  console.error("❌ Gemini API error:", err);
 }
-
-generateContent();
